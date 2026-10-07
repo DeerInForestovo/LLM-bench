@@ -1,0 +1,11 @@
+id,model,organization,region,source_domain,file
+openai,ChatGPT,OpenAI,US,openai.com,openai.png
+claude,Claude,Anthropic,US,claude.ai,claude.png
+gemini,Gemini,Google DeepMind,US,gemini.google.com,gemini.png
+grok,Grok,xAI,US,grok.com,grok.png
+mistral,Le Chat,Mistral AI,EU,mistral.ai,mistral.png
+llama,Llama,Meta,US,llama.com,llama.png
+deepseek,DeepSeek,DeepSeek,CN,deepseek.com,deepseek.png
+doubao,Doubao,ByteDance,CN,doubao.com,doubao.png
+kimi,Kimi,Moonshot AI,CN,kimi.com,kimi.png
+qwen,Qwen,Alibaba Cloud,CN,qwen.ai,qwen.png
