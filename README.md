@@ -3,12 +3,12 @@
 ![LLM-bench leaderboard](results/benchmark.png)
 
 > **TL;DR** — We introduce **LLM-bench**, a novel, contamination-proof
-> benchmark that ranks large language models by the number of distinct pixel
-> colors in their official logos (**Logo Color Diversity**, LCD). Our
-> evaluation of 10 frontier models reveals a definitive ranking, with
-> **Doubao (12,579)** and **Qwen (12,219)** establishing a clear performance
-> gap over the field, while **ChatGPT (256)** and **Grok (255)** rank last.
-> Code and data are fully open-sourced.
+> benchmark that ranks large language models by the number of perceptually
+> distinct colors in their official logos (**Logo Color Diversity**, LCD).
+> Our evaluation of 10 frontier models reveals a definitive ranking, with
+> **Gemini (480)** and **Doubao (278)** establishing a clear performance gap
+> over the field, while **ChatGPT (17)** and **Grok (17)** tie for last —
+> separated by zero colors. Code and data are fully open-sourced.
 
 ---
 
@@ -22,10 +22,10 @@ experience. We argue that a trustworthy benchmark must satisfy two properties:
 (i) the test set cannot be gamed by training on it, and (ii) the metric must
 be orthogonal to any capability a model could conceivably optimize. We
 operationalize these principles in **LLM-bench**, which scores each model by
-the number of distinct RGB colors present in its official logo after rigorous
-background removal and resolution normalization. Because a model's weights
-have no causal influence on its vendor's brand identity, data contamination
-is impossible *by construction*. Extensive experiments on 10 frontier models
+the number of perceptually distinct colors present in its official logo after
+rigorous background removal and resolution normalization. Because a model's
+weights have no causal influence on its vendor's brand identity, data
+contamination is impossible *by construction*. Extensive experiments on 10 frontier models
 from the US, EU, and CN ecosystems demonstrate that LLM-bench produces a
 stable, fully reproducible ranking with zero hyperparameter sensitivity on
 the model side. We release our entire pipeline — data acquisition,
@@ -95,12 +95,15 @@ Let `L_m` denote the official logo of model `m`, preprocessed as described in
 Section 3.3 into a 256×256 RGBA image. The **Logo Color Diversity** score is
 
 ```
-LCD(m) = | { RGB(p) : p ∈ L_m, α(p) > 0 } |
+LCD(m) = | { bin(RGB(p)) : p ∈ L_m, α(p) > 0 } |
 ```
 
-i.e., the cardinality of the set of distinct RGB tuples among non-transparent
-pixels. Fully transparent pixels are excluded by definition, ensuring that
-background matting cannot influence the metric.
+where `bin` quantizes each RGB channel to bins of width 16 — roughly the
+just-noticeable difference (JND) of the human eye. Colors that no observer
+can tell apart are therefore counted as one, which prevents anti-aliasing
+fringes and palette dithering noise from inflating the metric with
+invisible "colors". Fully transparent pixels are excluded by definition,
+ensuring that background matting cannot influence the score.
 
 ### 3.2 Dataset
 
@@ -111,16 +114,16 @@ visual identity shipped to users. See `data/manifest.csv` for full provenance.
 
 | Model   | Organization   | Region | LCD score |
 |---------|----------------|--------|-----------|
-| Doubao  | ByteDance      | CN     | 12,579    |
-| Qwen    | Alibaba Cloud  | CN     | 12,219    |
-| Gemini  | Google DeepMind| US     | 8,343     |
-| Claude  | Anthropic      | US     | 3,552     |
-| Llama   | Meta           | US     | 3,006     |
-| DeepSeek| DeepSeek       | CN     | 1,038     |
-| Le Chat | Mistral AI     | EU     | 410       |
-| Kimi    | Moonshot AI    | CN     | 394       |
-| ChatGPT | OpenAI         | US     | 256       |
-| Grok    | xAI            | US     | 255       |
+| Gemini  | Google DeepMind| US     | 480       |
+| Doubao  | ByteDance      | CN     | 278       |
+| Qwen    | Alibaba Cloud  | CN     | 206       |
+| Claude  | Anthropic      | US     | 149       |
+| Le Chat | Mistral AI     | EU     | 74        |
+| Kimi    | Moonshot AI    | CN     | 44        |
+| Llama   | Meta           | US     | 39        |
+| DeepSeek| DeepSeek       | CN     | 33        |
+| Grok    | xAI            | US     | 17        |
+| ChatGPT | OpenAI         | US     | 17        |
 
 *Table 1: Official LLM-bench leaderboard (see also `results/scores.csv`).*
 
@@ -171,26 +174,28 @@ the lower-ranked models remain visible.
 
 ## 4. Results and Analysis
 
-**Gradient-based identities dominate.** Doubao (12,579) and Qwen (12,219)
-form a statistically commanding top tier, followed by Gemini (8,343). We
-attribute this to these vendors' adoption of photorealistic avatars, glossy
-3D marks, and multi-hue gradient sparks — design decisions that, whether or
-not intended for this purpose, translate directly into LCD performance.
+**Gradient-based identities dominate.** Gemini (480) and Doubao (278) form
+a statistically commanding top tier, followed by Qwen (206). We attribute
+this to these vendors' adoption of rainbow-gradient sparks, photorealistic
+avatars, and glossy 3D marks — design decisions that, whether or not
+intended for this purpose, translate directly into LCD performance.
 
-**Minimalism is a liability.** ChatGPT (256) and Grok (255) occupy the last
-two positions, separated by a single color. Their strictly monochromatic
-identities — while iconic — leave no room for chromatic expression. We note
-with interest that both organizations market themselves as pursuing AGI; our
-results suggest they might first pursue a second color.
+**Minimalism is a liability.** ChatGPT (17) and Grok (17) tie for last,
+separated by zero colors. Their strictly monochromatic identities — while
+iconic — leave no room for chromatic expression. We note with interest that
+both organizations market themselves as pursuing AGI; our results suggest
+they might first pursue a second color.
 
-**The middle field.** Claude (3,552) and Llama (3,006) benefit from smooth
-anti-aliased strokes, while DeepSeek (1,038), Le Chat (410), and Kimi (394)
-occupy the lower-middle band. Le Chat's pixel-art identity, ironically the
-most "quantized" of the field, scores exactly as one would expect.
+**The middle field.** Claude (149) owes its respectable showing to a long,
+smoothly anti-aliased starburst edge, while Le Chat (74), Kimi (44), Llama
+(39), and DeepSeek (33) occupy the lower-middle band. Le Chat's pixel-art
+identity, ironically the most "quantized" of the field, scores exactly as
+one would expect.
 
-**Regional analysis.** The CN ecosystem (mean LCD ≈ 6,558) substantially
-outperforms the US ecosystem (mean ≈ 3,082) and the EU entry (410), a
-finding we report without further comment.
+**Regional analysis.** The US ecosystem (mean LCD = 140.4) and the CN
+ecosystem (mean LCD ≈ 140.3) are statistically indistinguishable,
+suggesting that logo color diversity is a truly international capability.
+The EU entry (74) trails both, a finding we report without further comment.
 
 ## 5. Limitations
 
@@ -198,8 +203,9 @@ finding we report without further comment.
   a gradient-heavy logo. We consider this a feature: it is the only benchmark
   whose gaming would require a corporate rebranding, and we would happily
   accept credit for forcing it.
-- **Resolution ceiling.** Normalizing to 256×256 caps the theoretical maximum
-  at 65,536 colors. Future work may explore 512×512.
+- **Resolution ceiling.** Normalizing to 256×256 with 16-level perceptual
+  bins caps the theoretical maximum at 4,096 colors. Future work may explore
+  512×512 canvases and 32-level bins.
 - **Scope.** Models without logos (e.g., weights-only releases) cannot be
   evaluated. We encourage such projects to at least ship an icon.
 

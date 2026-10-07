@@ -1,8 +1,10 @@
 """LLM-bench: the Logo Color Diversity (LCD) benchmark.
 
 Evaluates every model in data/processed/ on the official LLM-bench metric:
-the number of distinct RGB colors among non-transparent pixels of the
-model's preprocessed logo (256x256 RGBA, transparent background).
+the number of perceptually distinct colors among non-transparent pixels of
+the model's preprocessed logo (256x256 RGBA, transparent background).
+Perceptual deduplication (16-level binning per channel) merges colors that
+the human eye cannot tell apart.
 
 Outputs:
   results/scores.csv     -- per-model scores, sorted descending
@@ -37,17 +39,24 @@ GITHUB_URL = "github.com/DeerInForestovo/LLM-bench"
 BREAK_GAP_FACTOR = 1.8
 
 
+# Perceptual deduplication: RGB channels are quantized to bins of width 16
+# (roughly the just-noticeable difference for the human eye), so that
+# visually indistinguishable colors count as one.
+PERCEPTUAL_BIN = 16
+
+
 def load_manifest() -> dict:
     with open(MANIFEST, newline="") as f:
         return {row["id"]: row for row in csv.DictReader(f)}
 
 
 def count_colors(path: Path) -> int:
-    """Official LLM-bench metric: distinct RGB tuples among pixels with
-    alpha > 0. Fully transparent pixels are excluded by definition."""
+    """Official LLM-bench metric: perceptually distinct colors among pixels
+    with alpha > 0. Fully transparent pixels are excluded by definition."""
     arr = np.array(Image.open(path).convert("RGBA"))
     opaque = arr[arr[:, :, 3] > 0][:, :3]
-    return int(np.unique(opaque, axis=0).shape[0])
+    bins = (opaque.astype(np.int32) + PERCEPTUAL_BIN // 2) // PERCEPTUAL_BIN
+    return int(np.unique(bins, axis=0).shape[0])
 
 
 def dominant_color(path: Path) -> tuple:
@@ -199,7 +208,7 @@ def render_leaderboard(rows: list[dict]) -> None:
 
     label_ax.set_ylabel("")
     fig.text(
-        0.06, 0.5, "Distinct pixel colors (LCD score)", va="center",
+        0.06, 0.5, "Perceptually distinct colors (LCD score)", va="center",
         rotation="vertical", fontsize=11, color="#4a4232",
     )
     fig.suptitle(
@@ -208,8 +217,8 @@ def render_leaderboard(rows: list[dict]) -> None:
     )
     fig.text(
         0.5, 0.905,
-        "Higher is better. Metric: distinct RGB colors in the official logo "
-        "(256x256, background removed).",
+        "Higher is better. Metric: perceptually distinct colors in the "
+        "official logo (256x256, background removed).",
         ha="center", fontsize=9.5, color="#7a6f58", style="italic",
     )
     ax_bot.annotate(

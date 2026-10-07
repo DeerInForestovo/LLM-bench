@@ -1,11 +1,11 @@
 rank,model,organization,lcd_score
-1,Doubao,ByteDance,12579
-2,Qwen,Alibaba Cloud,12219
-3,Gemini,Google DeepMind,8343
-4,Claude,Anthropic,3552
-5,Llama,Meta,3006
-6,DeepSeek,DeepSeek,1038
-7,Le Chat,Mistral AI,410
-8,Kimi,Moonshot AI,394
-9,ChatGPT,OpenAI,256
-10,Grok,xAI,255
+1,Gemini,Google DeepMind,480
+2,Doubao,ByteDance,278
+3,Qwen,Alibaba Cloud,206
+4,Claude,Anthropic,149
+5,Le Chat,Mistral AI,74
+6,Kimi,Moonshot AI,44
+7,Llama,Meta,39
+8,DeepSeek,DeepSeek,33
+9,Grok,xAI,17
+10,ChatGPT,OpenAI,17
