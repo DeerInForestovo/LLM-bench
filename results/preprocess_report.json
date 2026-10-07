@@ -1,0 +1,172 @@
+[
+  {
+    "file": "claude.png",
+    "original_size": [
+      248,
+      248
+    ],
+    "matte_color": [
+      255,
+      255,
+      255
+    ],
+    "background_removed": true,
+    "output_size": [
+      256,
+      256
+    ]
+  },
+  {
+    "file": "deepseek.png",
+    "original_size": [
+      225,
+      225
+    ],
+    "matte_color": [
+      77,
+      107,
+      254
+    ],
+    "background_removed": false,
+    "output_size": [
+      256,
+      256
+    ]
+  },
+  {
+    "file": "doubao.png",
+    "original_size": [
+      180,
+      180
+    ],
+    "matte_color": [
+      195,
+      229,
+      255
+    ],
+    "background_removed": false,
+    "output_size": [
+      256,
+      256
+    ]
+  },
+  {
+    "file": "gemini.png",
+    "original_size": [
+      256,
+      256
+    ],
+    "matte_color": [
+      255,
+      255,
+      255
+    ],
+    "background_removed": true,
+    "output_size": [
+      256,
+      256
+    ]
+  },
+  {
+    "file": "grok.png",
+    "original_size": [
+      256,
+      256
+    ],
+    "matte_color": [
+      243,
+      243,
+      243
+    ],
+    "background_removed": true,
+    "output_size": [
+      256,
+      256
+    ]
+  },
+  {
+    "file": "kimi.png",
+    "original_size": [
+      192,
+      192
+    ],
+    "matte_color": [
+      39,
+      39,
+      39
+    ],
+    "background_removed": false,
+    "output_size": [
+      256,
+      256
+    ]
+  },
+  {
+    "file": "llama.png",
+    "original_size": [
+      64,
+      64
+    ],
+    "matte_color": [
+      0,
+      127,
+      255
+    ],
+    "background_removed": false,
+    "output_size": [
+      256,
+      256
+    ]
+  },
+  {
+    "file": "mistral.png",
+    "original_size": [
+      256,
+      256
+    ],
+    "matte_color": [
+      255,
+      255,
+      255
+    ],
+    "background_removed": true,
+    "output_size": [
+      256,
+      256
+    ]
+  },
+  {
+    "file": "openai.png",
+    "original_size": [
+      180,
+      180
+    ],
+    "matte_color": [
+      255,
+      255,
+      255
+    ],
+    "background_removed": true,
+    "output_size": [
+      256,
+      256
+    ]
+  },
+  {
+    "file": "qwen.png",
+    "original_size": [
+      64,
+      64
+    ],
+    "matte_color": [
+      255,
+      255,
+      255
+    ],
+    "background_removed": true,
+    "output_size": [
+      256,
+      256
+    ]
+  }
+]
